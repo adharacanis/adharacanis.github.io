@@ -34137,7 +34137,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 928473;
+	this.version = 884785;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = ["lime","utils","AssetCache"];
@@ -79259,8 +79259,8 @@ theater_InfinityBackground.prototype = {
 		this.HELPER_BUFFER[5] = 400;
 		this.HELPER_BUFFER[6] = 128.;
 		this.HELPER_BUFFER[7] = 128.;
-		this.HELPER_BUFFER[8] = -this.position.x / 128.;
-		this.HELPER_BUFFER[9] = -this.position.y / 128.;
+		this.HELPER_BUFFER[8] = -this.position.x / 22;
+		this.HELPER_BUFFER[9] = -this.position.y / 22;
 		this.HELPER_BUFFER[10] = 6.25;
 		this.HELPER_BUFFER[11] = 6.25;
 		renderer.drawRawTexture(this.texture,this.HELPER_BUFFER);
