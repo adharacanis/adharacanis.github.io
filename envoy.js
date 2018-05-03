@@ -34137,7 +34137,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 282413;
+	this.version = 916296;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = ["lime","utils","AssetCache"];
@@ -79759,9 +79759,22 @@ theater_troupe_actor_AttackComponent.prototype = $extend(theater_troupe_actor_Ba
 	attackModel: null
 	,update: function() {
 		theater_troupe_actor_BaseActorComponent.prototype.update.call(this);
-		if(this.model.target != null && this.checkCooldown(this.attackModel) && this.model.target.deathState == 0) {
+		var target = this.model.target;
+		var tmp;
+		if(target != null && this.checkCooldown(this.attackModel) && this.model.target.deathState == 0) {
+			var point1 = target.getModel(theater_troupe_actor_model_PositionModel).worldPosition;
+			var point2 = this.model.getModel(theater_troupe_actor_model_PositionModel).worldPosition;
+			var pow1 = point1.x - point2.x;
+			pow1 *= pow1;
+			var pow2 = point1.y - point2.y;
+			pow2 *= pow2;
+			tmp = Math.sqrt(pow1 + pow2) <= this.attackModel.attackRange;
+		} else {
+			tmp = false;
+		}
+		if(tmp) {
 			this.attackModel.lastAttackTime = this.worldStep.currentTime;
-			this.dispatchEvent(new theater_events_ActorEvent("onAttack",this.target,this.model));
+			this.dispatchEvent(new theater_events_ActorEvent("onAttack",this.actor,this.model));
 		}
 	}
 	,checkCooldown: function(attackModel) {
@@ -80123,9 +80136,10 @@ theater_troupe_actor_SimpleHunterComponent.prototype = $extend(theater_troupe_ac
 			r = this.rr + Math.cos(this.ii) / 10;
 		}
 		this.ii += 0.05;
+		var movementDistance = range - 15;
 		var step = this.positionModel.destinetionPosition;
-		step.x = direction.x * range;
-		step.y = direction.y * range;
+		step.x = direction.x * movementDistance;
+		step.y = direction.y * movementDistance;
 		var x = this.positionModel.destinetionPosition.x;
 		var y = this.positionModel.destinetionPosition.y;
 		this.positionModel.destinetionPosition.x = Math.cos(r) * x - Math.sin(r) * y;
@@ -80156,7 +80170,7 @@ theater_troupe_actor_TargetingComponent.prototype = $extend(theater_troupe_actor
 		pow1 *= pow1;
 		var pow2 = point1.y - point2.y;
 		pow2 *= pow2;
-		if(Math.sqrt(pow1 + pow2) > 500) {
+		if(Math.sqrt(pow1 + pow2) > 700) {
 			this.model.target = null;
 		} else {
 			this.model.target = target;
