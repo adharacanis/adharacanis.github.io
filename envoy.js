@@ -34137,7 +34137,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 928473;
+	this.version = 282413;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = ["lime","utils","AssetCache"];
@@ -79691,7 +79691,7 @@ theater_scene_TestGameSceneController.prototype = {
 		this.scene.addEventListener("onSpawn",$bind(this,this.onSpawnActor));
 		this.player = theater_troupe_actor_SimpleActorFactory.makeSimpleActor();
 		this.player.type = 0;
-		this.player.model.getModel(theater_troupe_actor_model_PositionModel).speed = 400;
+		this.player.model.getModel(theater_troupe_actor_model_PositionModel).speed -= 2;
 		this.mouseController.setPlayerData(this.player.model);
 		this.player.model.getModel(theater_troupe_actor_model_PositionModel);
 		this.cameraController.target = this.player;
@@ -80086,6 +80086,8 @@ theater_troupe_actor_SimpleActorFactory.prototype = {
 	__class__: theater_troupe_actor_SimpleActorFactory
 };
 var theater_troupe_actor_SimpleHunterComponent = function(actor) {
+	this.ii = 0;
+	this.rr = Math.PI / (180 + 360 * Math.random());
 	theater_troupe_actor_BaseActorComponent.call(this,actor);
 	this.attackModel = this.model.getModel(theater_troupe_actor_model_AttackModel);
 	this.positionModel = this.model.getModel(theater_troupe_actor_model_PositionModel);
@@ -80096,6 +80098,8 @@ theater_troupe_actor_SimpleHunterComponent.__super__ = theater_troupe_actor_Base
 theater_troupe_actor_SimpleHunterComponent.prototype = $extend(theater_troupe_actor_BaseActorComponent.prototype,{
 	attackModel: null
 	,positionModel: null
+	,rr: null
+	,ii: null
 	,update: function() {
 		theater_troupe_actor_BaseActorComponent.prototype.update.call(this);
 		var target = this.model.target;
@@ -80114,9 +80118,18 @@ theater_troupe_actor_SimpleHunterComponent.prototype = $extend(theater_troupe_ac
 		var distance = Math.sqrt(pow1 + pow2);
 		direction.x = (targetPosition.x - currentPosition.x) / distance;
 		direction.y = (targetPosition.y - currentPosition.y) / distance;
+		var r = this.rr;
+		if(distance > range + 15) {
+			r = this.rr + Math.cos(this.ii) / 10;
+		}
+		this.ii += 0.05;
 		var step = this.positionModel.destinetionPosition;
 		step.x = direction.x * range;
 		step.y = direction.y * range;
+		var x = this.positionModel.destinetionPosition.x;
+		var y = this.positionModel.destinetionPosition.y;
+		this.positionModel.destinetionPosition.x = Math.cos(r) * x - Math.sin(r) * y;
+		this.positionModel.destinetionPosition.y = Math.cos(r) * y + Math.sin(r) * x;
 		this.positionModel.destinetionPosition.x = targetPosition.x - this.positionModel.destinetionPosition.x;
 		this.positionModel.destinetionPosition.y = targetPosition.y - this.positionModel.destinetionPosition.y;
 	}
@@ -80204,7 +80217,7 @@ var theater_troupe_actor_model_DestructableModel = function(currentHealth,maxHea
 		maxHealth = 1000;
 	}
 	if(currentHealth == null) {
-		currentHealth = 1000;
+		currentHealth = 1012312300;
 	}
 	this.maxHealth = 0;
 	this.currentHealth = 0;
